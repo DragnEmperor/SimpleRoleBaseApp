@@ -4,8 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
     Box, Paper, Button
 } from '@mui/material';
-
-import FormDialogDeleteUser from "../components/DeleteDialog";
+import FormDialogDeleteTask from "../components/DeleteDialog";
 import FormDialogEditUser from "../components/EditDialog";
 import FormDialogAddTask from "../components/AddTaskDialog";
 import API from "../utils/api";
@@ -17,17 +16,18 @@ const ViewAllTasks = () => {
     const [getData, setGetData] = React.useState(false);
     const {logout} = useContext(AuthContext);
     const navigate = useNavigate();
+    const userId = localStorage.getItem('taskUserId');
 
     useEffect(() => {
-        API.user().fetchAll()
+        API.admin().fetchTasks(userId)
             .then((response) => {
                 console.log(response.data);
                 setTasksData(response.data);
             }).catch((error) => {
                 console.log(error);
             })
-    }, [getData]);
-
+    }, [getData,userId]);
+     
     const filteredRows = tasksData.map(row => ({
         id: row._id,
         description: row.description,
@@ -64,10 +64,11 @@ const ViewAllTasks = () => {
                     taskid={params.row.id}
                     refresh={refresh}
                 />
-                <FormDialogDeleteUser
+                <FormDialogDeleteTask
                     itemid={params.row.id}
                     // delete={props.delete}
                     refresh={refresh}
+                    for="tasks"
                 />
             </div>
             )
@@ -84,7 +85,7 @@ const ViewAllTasks = () => {
                 <FormDialogAddTask component={Paper}
                     // create={props.create}
                     refresh={refresh}
-                    for='self'
+                    for='other'
                 />
                 <Button variant="outlined" onClick={logoutHandler}
                     sx={{

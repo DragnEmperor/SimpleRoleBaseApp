@@ -5,15 +5,15 @@ const router = new express.Router()
 
 router.post('/users/signUp', async (req, res) => {
     const user = new User(req.body)
-    const {secret_code} = req.body
+    const {secretCode} = req.body
     try {
         const existingUser = await User.findOne({ email:user.email });
         if (existingUser) {
           return res.status(200).send({ message: 'User already exists!' });
         }
-        if(secret_code == 'IMMORTAL')
+        if(secretCode == 'IMMORTAL')
         user.role = 'admin';
-        else if(secret_code == 'RADIANT')
+        else if(secretCode == 'RADIANT')
         user.role = 'superadmin';
         console.log(user);
         await user.save()

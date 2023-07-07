@@ -9,6 +9,7 @@ import { CustomGrid,StyledTextField,StyledTextFieldUnderline,ErrorMessage,TabCla
 const Login = (props) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [secretCode, setSecretCode] = useState('');
   const [password, setPassword] = useState('');
   const {login,register} = useContext(AuthContext);
   var [activeTabId, setActiveTabId] = useState(0);
@@ -23,7 +24,6 @@ const Login = (props) => {
   },[])
 
   const handleLogin= () =>{
-    console.log('call backend', localStorage.getItem('profileNITH'))
     login(email,password,navigate,setIsLoading,setErrorMessage);
   }
 
@@ -33,11 +33,11 @@ const Login = (props) => {
   }
    
   const handleRegister = () => {
-    console.log('test')
     register(
       email,
       name,
       password,
+      secretCode,
       navigate,
       setIsLoading,
       setErrorMessage,
@@ -171,6 +171,22 @@ const Login = (props) => {
                 label="Email"
                 placeholder="Email"
                 type="email"
+                fullWidth
+              />
+              <TextField
+                id="secretCode"
+                InputProps={{
+                  classes: {
+                    underline:StyledTextFieldUnderline,
+                    input: StyledTextField,
+                  },
+                }}
+                value={secretCode}
+                onChange={e => setSecretCode(e.target.value)}
+                margin="normal"
+                label="Secret Code"
+                placeholder="Secret Code"
+                type="text"
                 fullWidth
               />
               <TextField

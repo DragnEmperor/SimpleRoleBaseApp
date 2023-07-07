@@ -15,15 +15,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Grow ref={ref} {...props} />;
 });
 
-const initialFormState = {
-    description: "",
-    completed: "false",
-};
-
 const FormDialogAddUser = props => {
+    let ownerId = JSON.parse(localStorage.getItem('authpegUser'))?._id;
     const [open, setOpen] = useState(false);
-    const [user, setUser] = useState(initialFormState);
     const [errors, setErrors] = useState({});
+    if(props.for!='self'){
+        ownerId = localStorage.getItem('taskUserId');
+    }
+    const initialFormState = {
+        owner: ownerId,
+        description: "",
+        completed: "false",
+    };
+    console.log('owner',ownerId)
+    const [user, setUser] = useState(initialFormState);
     const handleClickOpen = () => {
         setErrors({});
         setUser(initialFormState);

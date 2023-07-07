@@ -17,6 +17,7 @@ const initialFormState = {
   name: "",
   email: "",
   password:"",
+  role:'admin'
 };
 
 const FormDialogAddUser = props => {
@@ -88,7 +89,7 @@ const FormDialogAddUser = props => {
   return (
     <div>
       <IconButton color="primary" onClick={handleClickOpen}>
-        Add User
+        Add Admin
       </IconButton>
       <Dialog
         open={open}
@@ -144,7 +145,7 @@ const FormDialogAddUser = props => {
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSubmit} color="secondary">
-            Add User
+            Add Admin
           </Button>
         </DialogActions>
       </Dialog>

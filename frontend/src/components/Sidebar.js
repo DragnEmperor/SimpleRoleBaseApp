@@ -22,9 +22,6 @@ function ResponsiveDrawer(props) {
   const role = user.role;
   const name = user.name;
   console.log('sidebar', role)
-  let isAdmin = false;
-  if (role == 'admin' || role == 'superadmin')
-    isAdmin = true;
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -39,9 +36,15 @@ function ResponsiveDrawer(props) {
           </ListItemButton>
         </ListItem>
         <ListItem  >
-          {isAdmin &&
-            <ListItemButton key={"Add/remove Users"} component={Link} to="/addRemUser">
-              <ListItemText primary={'Add/remove Users'} />
+          {(role == 'admin' || role == 'superadmin') &&
+            <ListItemButton key={"Manage Users"} component={Link} to="/manageUser">
+              <ListItemText primary={'Manage Users'} />
+            </ListItemButton>}
+        </ListItem>
+        <ListItem  >
+          {role == 'superadmin' &&
+            <ListItemButton key={"Manage Admins"} component={Link} to="/manageAdmin">
+              <ListItemText primary={'Manage Admins'} />
             </ListItemButton>}
         </ListItem>
       </List>

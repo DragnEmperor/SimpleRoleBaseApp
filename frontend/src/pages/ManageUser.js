@@ -4,10 +4,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
     Box, Paper, Button
 } from '@mui/material';
-
 import FormDialogDeleteUser from "../components/DeleteDialog";
-import FormDialogEditUser from "../components/EditDialog";
-import FormDialogAddTask from "../components/AddTaskDialog";
+import FormDialogAddUser from "../components/AddUserDialog";
 import API from "../utils/api";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -19,7 +17,7 @@ const ViewAllTasks = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        API.user().fetchAll()
+       API.admin().fetchAll()
             .then((response) => {
                 console.log(response.data);
                 setTasksData(response.data);
@@ -30,26 +28,38 @@ const ViewAllTasks = () => {
 
     const filteredRows = tasksData.map(row => ({
         id: row._id,
-        description: row.description,
-        completed: row.completed,
-        owner: row.owner,
+        name: row.name,
+        email: row.email,
     }));
 
     const refresh = async () => {
         setGetData(!getData);
     }
-
+    const tasksHandler = (id) => {
+       localStorage.removeItem('taskUserId');
+       localStorage.setItem('taskUserId',id);
+       navigate('/usertasks');
+    }
+    const adminHandler = (id) => {
+        API.superadmin().assignAdmin(id).then((response)=>{
+            console.log(response);
+            refresh();
+        }).catch((error)=>{
+            console.log(error);
+        });
+    }
+    const role = JSON.parse(localStorage.getItem('authpegUser')).role;
     const columns = [
         // { field: 'id', headerName: 'ID', width: 90 },
         //Temporary trick to shift first column to right
         {
-            field: 'description',
-            headerName: 'Description',
+            field: 'name',
+            headerName: 'Name',
             flex: 1,
         },
         {
-            field: 'completed',
-            headerName: 'Completed Status',
+            field: 'email',
+            headerName: 'Email',
             flex: 1,
         },
         {
@@ -58,16 +68,31 @@ const ViewAllTasks = () => {
             flex: 1,
             renderCell: (params) =>
             (<div style={{ "width": "20rem", "display": "flex" }}>
-                <FormDialogEditUser
-                    description={params.row.description}
-                    completed={params.row.completed}
-                    taskid={params.row.id}
-                    refresh={refresh}
-                />
+                {role=='superadmin'&&
+                    <Button variant="outlined" onClick={()=>adminHandler(params.row.id)}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                        },
+                    }}>
+                    Assign Admin
+                </Button>
+                }
+                <Button variant="outlined" onClick={()=>tasksHandler(params.row.id)}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: '#1976d2',
+                            color: '#fff',
+                        },
+                    }}>
+                    View Tasks
+                </Button>
                 <FormDialogDeleteUser
                     itemid={params.row.id}
                     // delete={props.delete}
                     refresh={refresh}
+                    for='users'
                 />
             </div>
             )
@@ -81,10 +106,9 @@ const ViewAllTasks = () => {
     return (
         <Layout>
             <Box sx={{display:'flex',justifyContent:'space-around',marginBottom:'2rem'}}>
-                <FormDialogAddTask component={Paper}
-                    // create={props.create}
+                <FormDialogAddUser component={Paper}
+                    for="Admin"
                     refresh={refresh}
-                    for='self'
                 />
                 <Button variant="outlined" onClick={logoutHandler}
                     sx={{

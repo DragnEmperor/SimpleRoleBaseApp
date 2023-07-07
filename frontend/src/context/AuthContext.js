@@ -71,18 +71,19 @@ class AuthProvider extends React.PureComponent {
       }
     }
     
-    register = (email, name, password,regNumber, history, setIsLoading, setErrorMessage) => {
+    register = (email, name, password,secretCode, history, setIsLoading, setErrorMessage) => {
       setIsLoading(true);
     
       if (!!email && !!name && !!password) {
-        API.auth().register({ email, name, password,regNumber })
+        console.log(email, name, password,secretCode);
+        API.auth().register({ email, name, password,secretCode })
             .then(res => {
               console.log('signupres',res)
               localStorage.setItem('mypegtoken', res.data.token)
-              localStorage.setItem('authpegUser', JSON.stringify(res.data.student))
+              localStorage.setItem('authpegUser', JSON.stringify(res.data.user))
               setErrorMessage(null)
               setIsLoading(false);
-              history('/dadsdad')
+              history('/dashboard')
             })
             .catch(err => {
               console.log(err)
@@ -96,6 +97,7 @@ class AuthProvider extends React.PureComponent {
     }
 
     logout = (history) => {
+      console.log('logout called')
       this.setState({ 
         token : null,
         authUser: null
@@ -105,7 +107,7 @@ class AuthProvider extends React.PureComponent {
       localStorage.removeItem("profileNITH");
       localStorage.removeItem("accessBackend");
       API.auth().logout()
-      history.push("/login");
+      history("/login");
     }
 
     render() {

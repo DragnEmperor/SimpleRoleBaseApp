@@ -6,9 +6,9 @@ const User = require('../models/user')
 
 router.post('/tasks', auth, async (req, res) => {
     console.log('test')
+    const onwerId = req.body.ownerid
     const task = new Task({
-        ...req.body,
-        owner: req.user._id
+        ...req.body
     })
     try {
         await task.save()
@@ -62,9 +62,9 @@ router.patch('/tasks/:id', auth, async (req, res) => {
 
 router.delete('/tasks/:id', auth, async (req, res) => {
     try {
-        const task = await Task.findOneAndDelete({ _id: req.params.id, owner: req.user._id });
+        const task = await Task.findOneAndDelete({ _id: req.params.id});
         if (!task) {
-            res.status(200).send('No task with given id found');
+            throw Error('Task not found');
         }
         res.send({task,message: 'Task deleted successfully'});
     } catch (e) {
