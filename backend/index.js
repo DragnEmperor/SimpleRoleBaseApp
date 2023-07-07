@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 const User = require('./models/user');
 const bodyParser = require('body-parser');
 
-app.use(cors({ origin: '*', credentials: true }));
+app.use(cors({ origin: ['https://task-app-role.netlify.app/',], credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(userRouter);
