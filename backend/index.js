@@ -4,11 +4,11 @@ const userRouter = require('./routes/userRoutes');
 const taskRouter = require('./routes/taskRoutes');
 const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const User = require('./models/user');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(userRouter);

@@ -29,10 +29,12 @@ router.post('/users/login', async (req, res) => {
     try {
         // using the custom function findByCredentials defind in schema file
         const user = await User.findByCredentials(req.body.email, req.body.password);
+        if(!user)
+        return res.status(200).send({ message: 'User not found!' });
         const token = await user.generateAuthToken();
         res.send({ user, token });
     } catch (e) {
-        res.status(200).send(e);
+        res.status(200).send({error:'Invalid Details!'});
     }
 })
 

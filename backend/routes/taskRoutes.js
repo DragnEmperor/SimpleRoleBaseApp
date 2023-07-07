@@ -5,6 +5,7 @@ const router = new express.Router()
 const User = require('../models/user')
 
 router.post('/tasks', auth, async (req, res) => {
+    console.log('test')
     const task = new Task({
         ...req.body,
         owner: req.user._id
@@ -49,7 +50,7 @@ router.patch('/tasks/:id', auth, async (req, res) => {
     try {
         const task = await Task.findOne({ _id: req.params.id, owner: req.user._id});
         if (!task) {
-            return res.status(200).send();
+            return res.status(200).send('Task Not Found');
         }
         updates.forEach((e) => task[e] = req.body[e]);
         await task.save();
